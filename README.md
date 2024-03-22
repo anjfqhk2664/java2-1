@@ -1,14 +1,14 @@
 # 이상현 202130421
 
 ## 3월 22일 강의
-ctrl + shift + p > java pro > java create java project > 파일 선택 > 파일 이름
+*ctrl + shift + p > java pro > java create java project > 파일 선택 > 파일 이름
 
 자바 : .java > class
 자바 사용 장점 : 한번 작성된 코드는 모든 플랫폼에 구애받지 않고(WORA, Write Once Run Anywhere) 돌아감
 자바 사용 단점 : JVM(Java Virtual Machine)이 깔려있어야 함
 
-개발하는사람은 JDK를 깔면 되고,
-실행하는사람은 JRE를 깔면 된다
+*개발하는사람은 JDK를 깔면 되고,
+*실행하는사람은 JRE를 깔면 된다
 
 식별자란 : 클래스, 변수, 상수, 메소드 등에 붙이는 이름이다
 대소문자 구별, Num과 num은 다른 변수이다.
@@ -17,11 +17,13 @@ ctrl + shift + p > java pro > java create java project > 파일 선택 > 파일 
 리터럴 : 값(정수, 실수, 문자, 논리, 문자열 리터럴이 있다)
 
 var키워드
-    타입을 생략하고 변수 선언 가능
-    컨파일러가 추론하여 변수 타입 결정
+    *타입을 생략하고 변수 선언 가능
+    *컨파일러가 추론하여 변수 타입 결정
     
-    변수 선언 시 초깃값이 주어지지 않으면 컴파일 오류 / 초기화 필수
+    *변수 선언 시 초깃값이 주어지지 않으면 컴파일 오류 / 초기화 필수
 
+타입변환
+    한 타입의 값을 다른 타입의 값으로 변환
 ## 3월 15일 강의
 내용 정리
 
