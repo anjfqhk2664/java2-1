@@ -1,5 +1,374 @@
 # 이상현 202130421
 
+## 5월 31일 강의
+
+
+ 스윙 컴포넌트의 이해/정의
+스윙 컴포넌트는 자바에서 GUI를 구축하기 위해 제공하는 경량 컴포넌트입니다. 모든 스윙 컴포넌트는 `JComponent` 클래스를 상속받아 다양한 UI 요소를 제공합니다. 이를 통해 개발자는 윈도우, 버튼, 텍스트 필드 등 다양한 인터페이스 요소를 쉽게 구현할 수 있습니다.
+
+ 자바의 GUI 프로그래밍 방법
+
+1. 컴포넌트 기반 GUI 프로그래밍
+- **스윙 컴포넌트**를 이용하여 쉽게 GUI를 구축
+- 자바에서 제공하는 컴포넌트의 한계를 벗어나지 못함
+
+2. 그래픽 기반 GUI 프로그래밍
+- **그래픽**을 이용하여 GUI 구축
+- 개발자가 직접 그래픽으로 화면을 구성하는 부담
+- 다양한 GUI를 구축할 수 있는 장점
+- GUI의 처리 실행 속도가 빨라, 게임 등에 주로 이용
+
+ 추가 설명
+- **사용자 인터페이스 제공**: 그래픽 기반 GUI(Graphical User Interface)는 아이콘, 버튼, 윈도우 등 시각적 요소를 통해 사용자와 컴퓨터가 상호작용할 수 있게 하는 인터페이스입니다.
+- **사용자 경험 향상**: GUI는 명령어 기반 인터페이스(CLI)보다 직관적이고 사용하기 쉬워, 사용자 경험을 크게 향상시킵니다. 비전문가도 컴퓨터를 쉽게 사용할 수 있게 합니다.
+- **그래픽 요소 활용**: GUI는 그래픽 요소를 활용해 정보를 더 명확하고 이해하기 쉽게 전달합니다. 이를 통해 사용자들은 복잡한 작업도 쉽게 수행할 수 있습니다.
+- **운영 체제와 애플리케이션 통합**: GUI는 대부분의 현대 운영 체제와 애플리케이션에서 표준으로 사용되며, 윈도우, 맥OS, 리눅스 등의 시스템에서 다양한 소프트웨어와 함께 작동합니다.
+
+컴포넌트 기반 GUI 프로그래밍에서 사용되는 스윙 컴포넌트
+
+### 스윙 컴포넌트의 공통 메소드 - JComponent의 메소드
+
+#### 컴포넌트의 모양과 관련된 메소드
+```java
+- void setForeground(Color): 전경색 설정
+- void setBackground(Color): 배경색 설정
+- void setOpaque(boolean): 불투명성 설정
+- void setFont(Font): 폰트 설정
+- Font getFont(): 폰트 리턴
+```
+
+#### 컴포넌트의 위치와 크기에 관련된 메소드
+```java
+- int getWidth(): 폭 리턴
+- int getHeight(): 높이 리턴
+- int getX(): x 좌표 리턴
+- int getY(): y 좌표 리턴
+- Point getLocationOnScreen(): 스크린 좌표상에서의 컴포넌트 좌표 리턴
+- void setLocation(int, int): 위치 지정
+- void setSize(int, int): 크기 지정
+```
+
+#### 컴포넌트의 상태와 관련된 메소드
+```java
+- void setEnabled(boolean): 컴포넌트 활성화/비활성화 설정
+- void setVisible(boolean): 컴포넌트 보이기/숨기기 설정
+- boolean isVisible(): 컴포넌트의 보이는 상태 리턴
+```
+
+#### 컨테이너를 위한 메소드
+```java
+- Component add(Component): 자식 컴포넌트 추가
+- void remove(Component): 자식 컴포넌트 제거
+- void removeAll(): 모든 자식 컴포넌트 제거
+- Component[] getComponents(): 자식 컴포넌트 배열 리턴
+- Container getParent(): 부모 컨테이너 리턴
+- Container getTopLevelAncestor(): 최상위 부모 컨테이너 리턴
+```
+
+#### JComponent
+
+1. **스윙 컴포넌트는 모두 상속받는 슈퍼 클래스**: JComponent는 스윙 컴포넌트들이 공통으로 상속받는 `추상 클래스`입니다.
+2. **스윙 컴포넌트들이 상속받는 공통 메소드와 상수 구현**: JComponent는 다양한 메소드와 상수를 구현하여 스윙 컴포넌트들이 이를 활용할 수 있게 합니다.
+3. **JComponent의 주요 메소드 사례**:
+   - `setBackground(Color bg)`: 컴포넌트의 배경색을 설정합니다.
+   - `setForeground(Color fg)`: 컴포넌트의 전경색(텍스트 색상 등)을 설정합니다.
+   - `setFont(Font f)`: 컴포넌트의 폰트를 설정합니다.
+   - `repaint()`: 컴포넌트를 다시 그립니다.
+   - `addMouseListener(MouseListener l)`: 마우스 이벤트를 감지하기 위해 리스너를 추가합니다.
+
+### 실제활용 예제 코드
+```java
+import javax.swing.*;
+import java.awt.*;
+
+public class CustomComponent extends JComponent {
+    
+    // 이 메서드는 컴포넌트를 그릴 때 호출됩니다.
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); // 부모 클래스의 기본 페인팅 작업 수행
+        g.setColor(Color.BLUE); // 색상을 파란색으로 설정
+        g.fillRect(10, 10, 100, 100); // (10, 10) 위치에 100x100 크기의 파란색 사각형 그리기
+    }
+
+    // 메인 메서드: 애플리케이션 실행 진입점
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Custom JComponent"); // 새로운 프레임 생성
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 닫기 버튼 클릭 시 애플리케이션 종료
+        frame.add(new CustomComponent()); // 커스텀 컴포넌트를 프레임에 추가
+        frame.setSize(200, 200); // 프레임 크기를 200x200으로 설정
+        frame.setVisible(true); // 프레임을 화면에 표시
+    }
+}
+```
+
+ 레이블 생성 예
+1. **문자열 레이블 생성**
+```java
+JLabel textLabel = new JLabel("사랑합니다");
+```
+
+ 이미지 레이블 생성
+1. **이미지 파일로부터 이미지를 읽기 위해 Imageicon 클래스 사용**
+2. **다를 수 있는 이미지 : png , gif , jpg**
+```java
+--> sunset.jpg의 경로명이 "images/sumset.jpg"인 경우
+```
+
+ 수평 정령 값을 가진 레이블 컴포넌트 생성
+
+1. **수평 정렬로, 문자열과 이미지를 모두 가진 레이블**
+```java
+Imageicon image = new Imageicon("images/sunset.jpg");
+JLabel textLabel = new JLabel("사랑합니다"), image, SwingConstants CENTER");
+```
+
+ 이미지 버튼 만들기
+
+### 버튼에 3개의 이미지 등록하기
+
+- 하나의 버튼에 3개의 이미지를 등록합니다.
+- 마우스 조작에 따라 3개의 이미지 중 적절한 이미지가 자동으로 출력됩니다.
+
+### 3개의 버튼 이미지
+
+- **normallcon**
+  - 버튼의 보통 상태(디폴트) 때 출력되는 이미지
+  - 생성자에 이미지 아이콘을 전달하거나 `JButton`의 `setIcon(normalIcon)` 메소드를 사용합니다.
+  
+- **rolloverlcon**
+  - 버튼에 마우스가 올라갈 때 출력되는 이미지
+  - 이미지 설정 메소드: `JButton`의 `setRolloverIcon(rolloverIcon)`을 사용합니다.
+
+- **pressedicon**
+  - 버튼을 누른 상태 때 출력되는 이미지
+  - 이미지 설정 메소드: `JButton`의 `setPressedIcon(pressedIcon)`을 사용합니다.
+
+### 이미지 설정
+
+#### 이미지 로딩
+
+1. **필요한 이미지를 로딩합니다. 예시:**
+```java
+ImageIcon normalIcon = new ImageIcon("images/normalIcon.gif");
+ImageIcon rolloverIcon = new ImageIcon("images/rolloverIcon.gif");
+ImageIcon pressedIcon = new ImageIcon("images/pressedIcon.gif");
+```
+
+2. **버튼에 이미지 등록**
+- JButton의 메소드를 호출하여 이미지를 등록합니다. 예시:
+```java
+JButton button = new JButton("테스트버튼", normalIcon); // normalIcon 설정
+button.setRolloverIcon(rolloverIcon);
+button.setPressedIcon(pressedIcon);
+```
+
+3. **실행 중에 이미지 변경**
+- 실행 중에는 다른 이미지로 변경할 수 있습니다. 예시:
+```java
+// rolloverIcon으로 변경
+// pressedIcon으로 변경
+ImageIcon newIcon = new ImageIcon("images/newIcon.gif");
+button.setIcon(newIcon); // 디폴트 이미지 변경
+```
+
+ 체크박스의 Item 이벤트 처리
+
+### Item 이벤트
+
+- 체크박스의 선택 상태에 변화가 생길 때 발생하는 이벤트입니다. 이는 사용자가 마우스나 키보드로 체크박스를 선택하거나 해제하거나, 프로그램에서 체크박스를 선택하거나 해제하여 체크 상태에 변화가 생길 때 발생합니다.
+
+### 체크박스 설정
+
+```java
+JCheckBox checkbox = new JCheckBox("A");
+checkbox.setSelected(true); // 선택 상태로 변경
+```
+
+### 이벤트 처리
+
+- Item 이벤트가 발생하면 `ItemEvent` 객체가 생성됩니다.
+- `ItemListener` 리스너를 이용하여 이벤트를 처리합니다.
+
+#### ItemListener의 추상 메소드
+
+- `void itemStateChanged(ItemEvent e)`: 체크박스의 선택 상태가 변하는 경우 호출됩니다.
+
+#### ItemEvent의 주요 메소드
+
+- `int getStateChange()`: 체크박스가 선택된 경우 `ItemEvent.SELECTED`, 해제된 경우 `ItemEvent.DESELECTED`를 리턴합니다.
+- `Object getItem()`: 이벤트를 발생시킨 아이템 객체를 리턴합니다. 체크박스의 경우 `JCheckBox` 컴포넌트의 레퍼런스를 리턴합니다.
+
+
+```java
+checkbox.addItemListener(new ItemListener() {
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            // 체크박스가 선택된 경우 처리
+            System.out.println("체크박스가 선택되었습니다.");
+        } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+            // 체크박스가 해제된 경우 처리
+            System.out.println("체크박스가 해제되었습니다.");
+        }
+    }
+});
+```
+ JRadioButton으로 라디오버튼 만들기
+
+### JRadioButton의 용도
+
+JRadioButton은 버튼 그룹을 형성하고, 그룹에 속한 버튼 중 하나만 선택되는 라디오버튼입니다.
+
+#### 체크박스와의 차이점
+
+- 체크박스는 각각 선택 또는 해제가 가능하지만,
+- 라디오버튼은 그룹에 속한 버튼 중 하나만 선택됩니다.
+
+### 라디오버튼 생성
+
+다양한 생성자를 사용하여 라디오버튼을 생성할 수 있습니다:
+
+- `JRadioButton()`: 텍스트 없이 기본 라디오버튼을 생성합니다.
+- `JRadioButton(Icon icon)`: 아이콘 이미지가 있는 라디오버튼을 생성합니다.
+- `JRadioButton(Icon icon, boolean selected)`: 아이콘 이미지가 있는 라디오버튼을 생성하며, 선택 상태를 초기화할 수 있습니다.
+
+- `JRadioButton(String text)`: 텍스트가 있는 라디오버튼을 생성합니다.
+- `JRadioButton(String text, boolean selected)`: 텍스트가 있는 라디오버튼을 생성하며, 선택 상태를 초기화할 수 있습니다.
+- `JRadioButton(String text, Icon icon)`: 텍스트와 아이콘 이미지가 있는 라디오버튼을 생성합니다.
+- `JRadioButton(String text, Icon icon, boolean selected)`: 텍스트와 아이콘 이미지가 있는 라디오버튼을 생성하며, 선택 상태를 초기화할 수 있습니다.
+
+### 라디오버튼 생성 및 Item 이벤트 처리
+
+#### 버튼 그룹과 라디오버튼 생성 과정
+
+```java
+ButtonGroup group = new ButtonGroup();
+JRadioButton apple = new JRadioButton("Apple");
+JRadioButton pear = new JRadioButton("Pear");
+JRadioButton cherry = new JRadioButton("Cherry");
+
+group.add(apple);
+group.add(pear);
+group.add(cherry);
+
+container.add(apple);
+container.add(pear);
+container.add(cherry);
+```
+
+### 라디오버튼에 Item 이벤트 처리
+라디오버튼의 선택 상태 변경을 감지하기 위해 ItemListener를 사용합니다. 이벤트가 발생하면 setSelected()를 호출하여 선택 상태를 변경할 수 있습니다.
+
+```java
+apple.addItemListener(new ItemListener() {
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            // 라디오버튼이 선택되었을 때 처리
+        }
+    }
+});
+```
+ JTextField로 한 줄 입력 창 만들기
+
+JTextField는 한 줄의 문자열을 입력 받는 창, 즉 텍스트필드를 나타냅니다. 사용자가 텍스트를 입력하는 도중 <Enter> 키가 입력되면 Action 이벤트가 발생합니다. 입력 가능한 문자 개수와 입력 창의 크기는 서로 다를 수 있습니다.
+
+### 텍스트필드 생성
+
+다양한 생성자를 사용하여 텍스트필드를 생성할 수 있습니다:
+
+- `JTextField()`: 빈 텍스트필드를 생성합니다.
+- `JTextField(int cols)`: 입력 열의 갯수가 cols개인 텍스트필드를 생성합니다.
+- `JTextField(String text)`: 초기 텍스트로 문자열 text를 갖는 텍스트필드를 생성합니다.
+- `JTextField(String text, int cols)`: 입력 열의 수는 cols이고 초기 텍스트로 문자열 text를 갖는 텍스트필드를 생성합니다.
+
+#### 초기값이 "컴퓨터공학과"인 텍스트필드 생성 예
+```java
+JTextField tf2 = new JTextField("컴퓨터공학과");
+```
+
+ JList<E>
+
+JList는 하나 이상의 아이템을 보여주고 사용자가 아이템을 선택할 수 있도록 하는 리스트입니다. Java 7부터는 제네릭 리스트로 변경되어 `<E>`에 지정된 타입의 객체만 저장할 수 있습니다. 
+
+JList를 JScrollPane에 삽입하여 스크롤이 가능하도록 만들 수 있습니다.
+
+### 리스트 생성
+
+다양한 생성자를 사용하여 리스트를 생성할 수 있습니다:
+
+- `JList()`: 빈 리스트를 생성합니다.
+- `JList<E>(List<E> listData)`: 리스트에 아이템을 공급받는 리스트를 생성합니다.
+- `JList<E>(E[] listData)`: 리스트에 아이템을 배열로부터 공급받는 리스트를 생성합니다.
+
+#### 예시: 9개의 과일 이름 문자열이 든 리스트 만들기
+
+```java
+String[] fruits = {"apple", "banana", "kiwi", "mango", "pear", "peach", "berry", "strawberry", "blackberry"};
+JList<String> strList = new JList<String>(fruits);
+```
+
+## 메뉴 구성
+
+### **메뉴 만들기에 필요한 스윙 컴포넌트는 다음과 같습니다:**
+
+- **메뉴아이템 (MenuItems)**: 여러 개의 메뉴 아이템을 가지는 항목입니다.
+- **메뉴 (Menus)**: 여러 개의 메뉴 아이템을 가지는 그룹입니다.
+- **메뉴바 (JMenuBar)**: 여러 개의 메뉴를 붙이는 바이며, 프레임에 부착됩니다.
+- **분리선 (Separator)**: 메뉴 아이템 사이의 분리선으로, separator라고도 합니다. Menu 클래스의 `addSeparator()` 메소드를 호출하여 삽입할 수 있습니다.
+
+### **메뉴 만드는 과정**
+
+1. **JMenuBar 컴포넌트 생성**: 메뉴바를 생성합니다.
+2. **JMenu 컴포넌트를 생성하여 JMenuBar에 붙임**: 메뉴를 생성하고 메뉴바에 추가합니다.
+3. **JMenuItem 컴포넌트를 생성하여 JMenu에 붙임**: 각 메뉴에 메뉴 아이템을 추가합니다. 여러 개의 메뉴와 메뉴 아이템을 생성할 수 있습니다.
+4. **JMenuBar 컴포넌트를 JFrame에 붙임**: 생성한 메뉴바를 JFrame에 추가합니다.
+
+```java
+JMenuBar mb = new JMenuBar(); // 1. JMenuBar 생성
+JMenu screenMenu = new JMenu("Screen"); // 2. JMenu 생성
+mb.add(screenMenu); // 2. JMenu를 JMenuBar에 추가
+screenMenu.add(new JMenuItem("Load")); // 3. JMenuItem 추가
+screenMenu.add(new JMenuItem("Hide"));
+screenMenu.add(new JMenuItem("ReShow"));
+screenMenu.addSeparator();
+screenMenu.add(new JMenuItem("EXIT"));
+frame.setMenuBar(mb); // 4. JMenuBar를 JFrame에 추가
+```
+
+### 메뉴 아이템에 Action 리스너 설정
+```java
+JMenuItem item = new JMenuItem("Load");
+item.addActionListener(new MenuActionListener());
+screenMenu.add(item);
+
+// Action 이벤트를 처리할 리스너 작성
+class MenuActionListener implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+        // 사용자가 Load 메뉴 아이템을 선택하는 경우 처리할 작업을 구현합니다.
+    }
+}
+```
+
+## 팝업 다이얼로그, JOptionPane
+
+### 팝업 다이얼로그
+- 사용자에게 메시지를 전달하거나 문자열을 간단히 입력받는 용도
+- JOptionPane 클래스를 이용하여 생성
+  - static 타입의 간단한 메소드 이용
+
+### 입력 다이얼로그 - `JOptionPane.showInputDialog()`
+- 한 줄을 입력 받는 다이얼로그
+- `static String JOptionPane.showInputDialog(String msg)`
+  - `msg`: 다이얼로그 메시지
+  - `리턴 값`: 사용자가 입력한 문자열, 취소 버튼이 선택되거나 창이 닫히면 null 리턴
+
+```java
+String name = JOptionPane.showInputDialog("이름을 입력하세요");
+// name: 사용자가 입력한 값 (예: "Java Kim")
+```
+
+
+
 ## 5월 24일 강의
 
 이벤트 기반 프로그래밍
@@ -66,13 +435,13 @@
         클래스의 이름 없이 간단한 리스너 작성
         클래스 조차 만들 필요 없이 리스너 코드가 간단한 경우에 적합
         
-## 간단한 리스너의 경우 익명 클래스 사용 추천
+간단한 리스너의 경우 익명 클래스 사용 추천
 - 리스너가 매우 간단한 경우 익명 클래스를 사용하여 `코드를 간결하게 유지`, 메소드의 개수가 적은 경우에 사용
 
-## Action리스너를 구현하는 익명의 이벤트 리스너 작성
+Action리스너를 구현하는 익명의 이벤트 리스너 작성
 - 이름을 가진 클래스를 작성하지 않고도 익명 클래스를 사용하여 간단한 이벤트 리스너를 작성, `단순한 이벤트 처리`에 적합
 
-## 어댑터 클래스
+ 어댑터 클래스
 ```java
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -94,8 +463,7 @@ public class MyMouseListener extends MouseAdapter {
 ### 어댑터 클래스
 - 리스너의 모든 메소드를 단순 리턴하도록 만든 클래스
 - 마우스 어댑터 사용 예시
-
-## 키 이벤트와 포커스
+ 키 이벤트와 포커스
 
 **키 이벤트 발생 시점**
 - 키를 누르는 순간
