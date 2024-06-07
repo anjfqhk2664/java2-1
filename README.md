@@ -1,5 +1,204 @@
 # 이상현 202130421
 
+## 6월 7일 강의
+
+
+### 멀티태스킹 ( multi-tasking ) 개념
+- 멀티태스킹
+    - 여러 개의 작업(태스크)이 동시에 처리되는 것
+
+# 스레드와 운영체제
+
+## 스레드(thread)
+- 운영체제에 의해 관리되는 하나의 작업 혹은 태스크
+- 스레드와 태스크(혹은 작업)은 바꾸어 사용해도 무관
+
+ 멀티스레딩(multi-threading)
+- 여러 스레드를 동시에 실행시키는 응용프로그램을 작성하는 기법
+
+### 스레드 구성
+- 스레드 코드
+  - 작업을 실행하기 위해 작성한 프로그램 코드
+  - 개발자가 작성
+- 스레드 정보
+  - 스레드 명, 스레드 ID, 스레드의 실행 소요 시간, 스레드의 우선 순위 등
+  - 운영체제가 스레드에 대해 관리하는 정보
+
+
+
+### 멀티태스킹 구현 기술
+- 멀티프로세싱(multi-processing)
+  - 하나의 응용프로그램이 여러 개의 프로세스를 생성하고, 각 프로세스가 하나의 작업을 처리하는 기법
+  - 각 프로세스 독립된 메모리 영역을 보유하고 실행
+  - 프로세스 사이의 문맥 교환에 따른 과도한 오버헤드와 시간 소모의 문제점
+- 멀티스레딩(multi-threading)
+  - 하나의 응용프로그램이 여러 개의 스레드를 생성하고, 각 스레드가 하나의 작업을 처리하는 기법
+  - 하나의 응용프로그램에 속한 스레드는 변수 메모리, 파일 오픈 테이블 등 자원으로 공유하므로, 문맥 교환에 따른 오버헤드가 매우 작음
+  - 현재 대부분의 운영체제가 멀티스레딩을 기본으로 함
+
+ 자바 스레드(Thread)와 JVM
+
+### 자바 스레드
+- 자바 가상 기계(JVM)에 의해 스케쥴되는 실행 단위의 코드 블럭
+- 스레드의 생명 주기는 JVM에 의해 관리됨: JVM은 스레드 단위로 스케쥴링
+
+### JVM과 자바의 멀티스레딩
+- 하나의 JVM은 하나의 자바 응용프로그램만 실행
+- 자바 응용프로그램이 시작될 때 JVM이 함께 실행됨
+  - 자바 응용프로그램이 종료하면 JVM도 함께 종료함
+- 응용프로그램은 하나 이상의 스레드로 구성 가능
+
+# Thread 클래스를 상속받아 스레드 만들기
+
+ Thread 클래스를 상속받아 스레드 만들기
+- Thread 클래스 상속
+- run() 메소드 오버라이딩
+  - run() 메소드는 스레드 코드를 포함
+  - run() 메소드에서 스레드 실행 시작
+ 스레드 객체 생성 및 시작
+- 스레드 객체 생성
+  - Thread 클래스의 생성자 이용
+- 스레드 시작
+  - start() 메소드 호출
+    - JVM에 의해 스케쥴되기 시작
+
+ Thread 클래스의 주요 메소드
+- `Thread()`
+  - 스레드 객체 생성
+- `Thread(Runnable target)`
+  - Runnable 객체를 이용하여 스레드 객체 생성
+- `Thread(String name)`
+  - 이름이 있는 스레드 객체 생성
+- `void run()`
+  - 스레드 코드 작성을 위한 메소드
+- `void start()`
+  - JVM에게 스레드 실행 시작 요청
+- `void interrupt()`
+  - 스레드 강제 종료
+- `static void yield()`
+  - 다른 스레드에게 실행 양보
+- `void join()`
+  - 스레드가 종료할 때까지 대기
+- `long getId()`
+  - 스레드의 ID값 반환
+- `String getName()`
+  - 스레드의 이름 반환
+- `int getPriority()`
+  - 스레드의 우선순위 값 반환
+- `void setPriority(int priority)`
+  - 스레드의 우선순위 값을 변경
+- `Thread.State getState()`
+  - 스레드의 상태 값 반환
+- `static void sleep(long millis)`
+  - 스레드를 지정한 시간만큼 재우기
+- `static Thread currentThread()`
+  - 현재 실행 중인 스레드 객체의 레퍼런스 반환
+
+### 예제 코드
+- Thread를 상속받아 1초 단위로 초 시간을 출력하는
+TimerThread 스레드 작성 사례
+
+```java
+// TimerThread 클래스 선언
+class TimerThread extends Thread {
+    // 타이머 값이 출력되는 레이블
+    private Label timerLabel;
+
+    // 생성자
+    public TimerThread(Label timerLabel) {
+        this.timerLabel = timerLabel;
+    }
+
+    // 스레드 코드 run()이 종료하면 스레드 종료
+    @Override
+    public void run() {
+        // 타이머 카운트 값
+        int n = 0;
+
+        while (true) {
+            // 타이머 값을 레이블에 설정
+            timerLabel.setText(Integer.toString(n));
+            n++; // 카운트 증가
+            try {
+                Thread.sleep(1000); // 1초 동안 잠을 잔 후 실행
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
+}
+```
+
+### 예제코드 2
+- Thread를 상속받아 1초 단위 타이머 스레드 만들기
+
+```java
+// TimerThread를 사용하는 예제
+public class ThreadTimerEx extends JFrame {
+    public ThreadTimerEx() {
+        setTitle("Thread를 상속받은 타이머 스레드 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // 컨테이너 설정
+        Container c = getContentPane();
+        c.setLayout(new FlowLayout());
+
+        // 타이머 값을 출력할 레이블 생성
+        JLabel timerLabel = new JLabel();
+        timerLabel.setFont(new Font("Gothic", Font.ITALIC, 20));
+        c.add(timerLabel);
+
+        // 타이머 스레드 객체 생성
+        TimerThread th = new TimerThread(timerLabel);
+
+        setSize(250, 150);
+        setVisible(true);
+
+        // 타이머 스레드 시작
+        th.start();
+    }
+
+    public static void main(String[] args) {
+        new ThreadTimerEx();
+    }
+}
+```
+ Main 스레드
+- main 스레드
+    - JVM이 응용프로그램을 실행할 때 디폴트로 생성되는 스레드
+    - main()메소드
+    - main 메소드가 종료하면 main 쓰레드 종료
+
+ 스레드 동기화(Thread Synchronization)
+
+### 멀티스레드 프로그램 작성시 주의점
+- 다수의 스레드가 공유 데이터에 동시에 접근하는 경우 공유 데이터의 값에 예상치 못한 결과가 발생할 수 있음.
+
+### 스레드 동기화
+- **동기화란?**
+    - 스레드 사이의 실행 순서를 제어하고 공유 데이터에 대한 접근을 원활하게 하는 기법.
+- 멀티스레드의 공유 데이터의 동시 접근 문제를 해결하기 위한 방법:
+    1. 공유 데이터를 접근하는 모든 스레드를 한 줄로 세우기.
+    2. 한 스레드가 공유 데이터에 대한 작업을 끝낼 때까지 다른 스레드가 대기하도록 함.
+
+### 자바의 스레드 동기화 방법 - 2가지
+1. `synchronized` 키워드로 동기화 블록 지정
+2. `wait()`-`notify()` 메소드로 스레드의 실행 순서를 제어함.
+
+### synchronized 블록 지정
+
+### synchronized 키워드
+- 스레드가 독점적으로 실행해야 하는 부분(동기화 코드)을 표시하는 키워드.
+- 일제 영역(critical section) 표기 키워드.
+
+### synchronized 블록 지정 방법
+- 메소드 전체 혹은 코드 블록을 synchronized 블록으로 지정할 수 있음.
+
+### synchronized 블록이 실행될 때
+- 먼저 실행한 스레드가 모니터 소유.
+    - 모니터: 해당 객체를 독점적으로 사용할 수 있는 권한.
+- 모니터를 소유한 스레드가 모니터를 내놓을 때까지 다른 스레드는 대기해야 함.
+
 ## 5월 31일 강의
 
 
