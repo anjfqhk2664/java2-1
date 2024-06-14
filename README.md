@@ -1,5 +1,392 @@
 # 이상현 202130421
 
+## 6월 14일 강의
+
+## 6월 14일 강의
+#### 내용정리 
+자바의 입출력 스트림 종류
+문자 스트림
+문자를 입출력하는 스트림
+문자가 아닌 바이너리 데이터는 스트림에서 처리하지 못함
+문자가 아닌 데이터를 문자 스트림으로 출력하면 깨진 기호가 출력
+바이너리 파일을 문자 스트림으로 읽으면 읽을 수 없는 바이트가 생겨서 오류 발생
+ex) 텍스트 파일을 읽는 입력 스트림
+바이트 스트림
+입출력 데이터를 단순 바이트의 흐름으로 처리
+문자 데이터든 바이너리 데이터든 상관없이 처리 가능
+ex) 바이너리 파일을 읽는 입력 스트림
+
+스트림 연결의 흐름
+System.in에서 바이트 입력
+바이트 스트림을 InputStreamReader를 통해 문자 입력 스트림으로 변환
+변환된 문자 스트림을 자바 응용 프로그램에서 처리
+
+## 문자 스트림으로 텍스트 파일 읽기
+
+텍스트 파일을 읽기 위해 문자 스트림 `FileReader` 클래스를 이용합니다.
+
+### 1. 파일 입력 스트림 생성 (파일 열기)
+- 스트림을 생성하고 파일을 열어 스트림과 연결합니다.
+
+```java
+FileReader fin = new FileReader("C:\\W\\test.txt");
+```
+
+### 2. 파일 읽기
+- `read()`로 문자 하나씩 파일에서 읽습니다.
+
+```java
+int c;
+while((c = fin.read()) != -1) { // 문자를 c에 읽음. 파일 끝까지 반복
+    System.out.print((char)c); // 문자 c 화면에 출력
+}
+```
+
+### 3. 스트림 닫기
+- 스트림이 더 이상 필요 없으면 닫아야 합니다. 닫힌 스트림에서는 읽을 수 없습니다.
+
+```java
+fin.close();
+```
+
+## 파일 입출력과 예외 처리
+
+파일 입출력 동안 예외가 발생할 수 있습니다.
+
+### 1. 스트림 생성 동안 예외 발생 가능
+- 스트림 생성 시 `FileNotFoundException`이 발생할 수 있습니다.
+  - 파일의 경로명이 틀리거나, 디스크의 고장 등으로 파일을 열 수 없음
+
+```java
+FileReader fin = new FileReader("C:\\W\\test.txt"); // FileNotFoundException 발생 가능
+```
+
+### 2. 파일 읽기, 쓰기, 닫기를 하는 동안 예외 발생 가능
+- 디스크 오류 또는 파일이 중간에 깨진 경우, 디스크 공간이 모자라서 파일 입출력 불가
+
+```java
+int c = fin.read(); // IOException 발생 가능
+```
+
+### 3. try-catch 블록 사용 필요
+- 자바 컴파일러의 강제 사항입니다.
+
+```java
+try {
+    FileReader fin = new FileReader("C:\\W\\test.txt");
+    int c = fin.read();
+    fin.close();
+} catch (FileNotFoundException e) {
+    System.out.println("파일을 열 수 없음");
+} catch (IOException e) {
+    System.out.println("입출력 오류");
+}
+```
+
+## 문자 스트림으로 텍스트 파일 쓰기
+
+텍스트 파일에 쓰기 위해 문자 스트림 `FileWriter` 클래스를 이용합니다.
+
+### 1. 파일 출력 스트림 생성 (파일 열기)
+- 스트림을 생성하고 파일을 열어 스트림과 연결
+
+```java
+FileWriter fout = new FileWriter("c:\\W\\Temp\\test.txt");
+```
+
+### 2. 파일 쓰기
+- `write()`로 문자 하나씩 파일에 기록
+
+```java
+fout.write('A'); // 문자 'A'를 파일에 기록
+```
+
+- 블록 단위로 쓰기 가능
+
+```java
+char[] buf = new char[1024];
+fout.write(buf, 0, buf.length); // buf[0]부터 버퍼 크기만큼 쓰기
+```
+
+### 3. 스트림 닫기
+- `close()`로 스트림 닫기
+
+```java
+fout.close(); // 스트림 닫기. 더 이상 스트림에 기록할 수 없음.
+```
+## 바이트 스트림으로 바이너리 파일 쓰기
+
+바이너리 값을 파일에 저장하기 위해 프로그램 내의 변수, 배열, 버퍼에 든 바이너리 값을 파일에 그대로 기록하는 방법입니다. `FileOutputStream` 클래스를 이용합니다.
+
+### 1. 파일 출력 스트림 생성 (파일 열기)
+- 스트림을 생성하고 파일을 열어 스트림과 연결
+
+```java
+FileOutputStream fout = new FileOutputStream("c:\\W\\Temp\\test.out");
+```
+
+### 2. 파일 쓰기
+- `write()`로 배열의 값을 하나씩 파일에 기록
+
+```java
+byte[] b = {7, 51, 3, 4, -1, 24};
+for(int i = 0; i < b.length; i++) 
+    fout.write(b[i]); // 배열 b를 바이너리 그대로 기록
+```
+
+### 3. 스트림 닫기
+- `close()`로 스트림 닫기
+
+```java
+fout.close(); // 스트림 닫기
+```
+## File 클래스
+
+### File 클래스
+- 파일의 경로명 및 속성을 다루는 클래스
+  - `java.io.File`
+  - 파일과 디렉터리 경로명의 추상적 표현
+- 파일 이름 변경, 삭제, 디렉터리 생성, 크기 등 파일 관리
+- `File` 객체에는 파일 읽기/쓰기 기능 없음
+  - 파일 입출력은 파일 입출력 스트림 이용
+
+### File 객체 생성
+- 생성자에 파일 경로명을 주어 `File` 객체 생성
+
+```java
+File f = new File("c:\\W\\Temp\\test.txt");
+```
+
+- 디렉터리와 파일명을 나누어 생성자 호출
+
+```java
+File f = new File("c:\\W\\Temp", "test.txt");
+```
+## File 클래스 활용
+
+### 파일 크기
+```java
+long size = f.length();
+```
+
+### 파일 경로명
+```java
+File f = new File("c:\\windows\\system.ini");
+String filename = f.getName(); // "system.ini"
+String path = f.getPath(); // "c:\\windows\\system.ini"
+String parent = f.getParent(); // "c:\\windows"
+```
+
+### 파일 타입
+```java
+if (f.isFile())
+    System.out.println(f.getPath() + "는 파일입니다."); // 파일
+else if (f.isDirectory())
+    System.out.println(f.getPath() + "는 디렉터리입니다."); // 디렉터리
+```
+예시 출력: `c:\\windows\\system.ini는 파일입니다.`
+
+### 디렉터리 파일 리스트 얻기
+```java
+File f = new File("c:\\W\\Temp");
+File[] subfiles = f.listFiles(); // c:\\W\\Temp의 파일 및 서브 디렉터리 리스트 얻기
+
+for (int i = 0; i < subfiles.length; i++) {
+    System.out.print(subfiles[i].getName()); // 서브 파일명 출력
+    System.out.println(" 파일 크기: " + subfiles[i].length()); // 서브파일 크기 출력
+}
+```
+## TCP/IP 소개
+
+### TCP/IP 프로토콜
+- 두 시스템 간에 데이터가 손상없이 안전하게 전송되도록 하는 통신 프로토콜
+- TCP에서 동작하는 응용프로그램 사례
+  - e-mail, FTP, 웹(HTTP) 등
+
+### TCP/IP 특징
+- 연결형 통신
+  - 한 번 연결 후 계속 데이터 전송 가능
+- 보낸 순서대로 받아 응용프로그램에게 전달
+
+### 계층 구조
+- **응용프로그램**: HTTP, e-mail, FTP 등
+- **Transport**: TCP 등
+- **Network**: IP 등
+- **Link**: 디바이스 드라이버 등
+
+### IP 주소
+- 네트워크 상에서 유일하게 식별될 수 있는 컴퓨터 주소
+- 숫자로 구성된 주소
+  - 4개의 숫자가 `.`으로 연결
+  - 예) `192.168.1.1`
+
+### 도메인 이름
+- 숫자로 된 주소는 기억하기 어려우므로 `www.naver.com`과 같은 문자열로 구성된 도메인 이름으로 바꿔 사용
+  - DNS(Domain Name System)
+    - 문자열로 구성된 도메인 이름을 숫자로 구성된 IP 주소로 자동 변환
+
+### IP 버전
+- 현재는 32비트의 IP 버전 4(IPv4)가 사용되고 있음
+  - IP 주소 고갈로 인해 128비트의 IP 버전 6(IPv6)이 점점 사용되는 추세
+
+### 로컬 IP 주소
+- 자신의 IP 주소를 간단히 `localhost`라는 이름으로 사용 가능
+
+### 내 IP주소 확인하기
+- ipconfg 사용하여 확인할수있음
+
+## 포트
+
+### 포트
+- 통신하는 프로그램 간에 가상의 연결단 포트 생성
+  - IP 주소는 네트워크 상의 컴퓨터 또는 시스템을 식별하는 주소
+  - 포트 번호를 이용하여 통신할 응용프로그램 식별
+- 모든 응용프로그램은 하나 이상의 포트 생성 가능
+  - 포트를 이용하여 상대방 응용프로그램과 데이터 교환
+
+### 잘 알려진 포트 (well-known ports)
+- 시스템이 사용하는 포트 번호
+- 잘 알려진 응용프로그램에서 사용하는 포트 번호
+  - 0번부터 1023번 사이의 포트 번호
+  - 예: SSH 22, HTTP 80, FTP 21
+
+### 포트 번호 사용
+- 잘 알려진 포트 번호는 개발자가 사용하지 않는 것이 좋음
+  - 충돌 가능성이 있음
+
+## 소켓 프로그래밍
+
+### 소켓 (socket)
+- TCP/IP 네트워크를 이용하여 쉽게 통신 프로그램을 작성하도록 지원하는 기본 기술
+
+### 소켓의 기능
+- 두 응용프로그램 간의 양방향 통신 링크의 한쪽 끝 단
+- 소켓끼리 데이터를 주고받음
+- 소켓은 특정 IP 포트 번호와 결합
+
+### 자바의 소켓 통신
+- 자바로 소켓 통신할 수 있는 라이브러리 지원
+
+### 소켓 종류
+- 서버 소켓과 클라이언트 소켓
+
+### 예시
+- 웹 브라우저와 웹 서버 간의 통신에서 소켓과 포트를 이용하여 데이터를 주고받음
+
+Socket 클래스, 클라이언트 소켓
+Socket 클래스
+클라이언트 소켓에 사용되는 클래스
+java.net 패키지에 포함
+
+## 클라이언트에서 소켓으로 서버에 접속하는 코드
+
+### 클라이언트 소켓 생성 및 서버에 접속
+```java
+Socket clientSocket = new Socket("128.12.1.1", 9999);
+```
+- `Socket`의 생성자에서 128.12.1.1의 주소의 9999포트에 접속
+
+### 소켓으로부터 데이터를 전송할 입출력 스트림 생성
+```java
+BufferedReader in = new BufferedReader(
+    new InputStreamReader(clientSocket.getInputStream()));
+BufferedWriter out = new BufferedWriter(
+    new OutputStreamWriter(clientSocket.getOutputStream()));
+```
+
+### 서버로 데이터 전송
+- `flush()`를 호출하면 스트림 속에 데이터 모두 전송
+
+```java
+out.write("hello" + "\n");
+out.flush();
+```
+
+### 서버로부터 데이터 수신
+```java
+String line = in.readLine(); // 서버로부터 한 행의 문자열 수신
+```
+
+### 네트워크 접속 종료
+```java
+clientSocket.close();
+```
+## 서버에 클라이언트가 연결되는 과정
+
+### 1. 서버는 서버 소켓으로 들어오는 연결 요청을 기다림 (listen)
+- 서버 소켓은 특정 포트에서 클라이언트의 연결 요청을 대기
+
+### 2. 클라이언트가 서버에게 연결 요청
+- 클라이언트는 서버의 IP 주소와 포트 번호로 연결 요청을 보냄
+
+### 3. 서버가 연결 요청 수락 (accept)
+- 서버는 새로운 클라이언트 소켓을 만들어 클라이언트와 통신하게 함
+- 그리고 다시 다른 클라이언트의 연결을 기다림
+
+### 과정 요약
+1. 서버는 listen 상태에서 클라이언트의 연결 요청을 기다림
+2. 클라이언트가 서버에게 연결 요청을 보냄
+3. 서버는 연결 요청을 수락하여 새로운 클라이언트 소켓을 만듦
+4. 서버는 클라이언트와 통신을 시작하고, 동시에 다른 클라이언트의 연결 요청을 계속 대기
+
+## 서버에 클라이언트가 연결되는 과정
+
+1. **서버는 서버 소켓으로 들어오는 연결 요청을 기다림 (listen)**
+   - 서버는 특정 포트에서 들어오는 연결 요청을 수신 대기합니다.
+
+2. **클라이언트가 서버에게 연결 요청**
+   - 클라이언트는 서버 소켓에 연결 요청을 보냅니다.
+
+3. **서버가 연결 요청 수락 (accept)**
+   - 새로운 클라이언트 소켓을 만들어 클라이언트와 통신하게 함
+   - 그리고 다시 다른 클라이언트의 연결을 기다림
+
+
+## 서버가 클라이언트와 통신하는 과정
+
+1. **서버 소켓 생성**
+   ```java
+   ServerSocket serverSocket = new ServerSocket(9999);
+   ```
+   - 서버는 9999 포트에서 접속 대기합니다.
+
+2. **클라이언트로부터 접속 기다림**
+   ```java
+   Socket socket = serverSocket.accept();
+   ```
+   - `accept()` 메소드는 접속 요청이 오면 접속 후 새 Socket 객체를 반환합니다.
+   - 접속 후 새로 만들어진 Socket 객체를 통해 클라이언트와 통신합니다.
+
+3. **네트워크 입출력 스트림 생성**
+   ```java
+   BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+   BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+   ```
+   - Socket 객체의 `getInputStream()`과 `getOutputStream()` 메소드를 이용하여 입출력 데이터 스트림을 생성합니다.
+
+## 서버-클라이언트 채팅 프로그램 만들기
+
+### 간단한 채팅 프로그램
+- 서버와 클라이언트가 1:1로 채팅
+- 클라이언트와 서버가 서로 한 번씩 번갈아 가면서 문자열 전송
+- 문자열 끝에 "\n"을 덧붙여 보내고 라인 단위로 수신
+- 클라이언트가 "bye"를 보내면 프로그램 종료
+
+### 채팅 프로그램 흐름
+1. **연결 대기**
+   - 서버는 클라이언트의 연결 요청을 대기
+2. **연결 요청**
+   - 클라이언트가 서버에 연결 요청을 보냄
+3. **새로운 소켓으로 연결**
+   - 서버가 새로운 소켓을 생성하여 클라이언트와 연결
+4. **메시지 전송**
+   - 클라이언트: "안녕?\n"
+   - 서버: "너도 안녕\n"
+5. **연결 종료**
+   - 클라이언트가 "bye\n"를 보내면 연결 종료
+
+
+
 ## 6월 7일 강의
 
 
